@@ -18,30 +18,13 @@ function Home() {
     textarea.style.height = `${textarea.scrollHeight}px`; // Set height to scroll height
   };
 
-  const apiKey = process.env.REACT_APP_API_KEY;
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-
+  
     try {
-      const response = await axios.post(
-        'https://api.openai.com/v1/chat/completions',
-        {
-          messages: [
-            {role: 'system', content: 'You are a factual assistant, knowledgeable about Vincenzo.'},
-            { role: 'user', content: userInput }],
-          model: "ft:gpt-4o-2024-08-06:personal:me-v3:ATXTckgl",
-          max_tokens: 150,
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      setLlmResponse(response.data.choices[0].message.content);
+      const response = await axios.post('/api/getOpenAiResponse', { userInput });
+      setLlmResponse(response.data.result);
     } catch (error) {
       console.error('Error fetching data:', error);
       setLlmResponse('Sorry, something went wrong.');
