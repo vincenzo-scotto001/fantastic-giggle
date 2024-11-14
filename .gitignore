@@ -2,3 +2,7 @@
 *.py
 *.jsonl
 *.pdf
+node_modules
+
+
+*.env

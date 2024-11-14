@@ -18,6 +18,7 @@ function Home() {
     textarea.style.height = `${textarea.scrollHeight}px`; // Set height to scroll height
   };
 
+  const apiKey = process.env.REACT_APP_API_KEY;
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -34,7 +35,7 @@ function Home() {
         },
         {
           headers: {
-            'Authorization': `Bearer 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`,
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
           },
         }
