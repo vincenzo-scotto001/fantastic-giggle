@@ -1,0 +1,50 @@
+/* Container to center-align content and give padding */
+.projects-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: left;
+    transform: translateX(-20px);
+    color: #ECDFCC
+  }
+  
+  /* Shaded box for each project item */
+  .project-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Project title styling */
+  .project-item h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #333;
+  }
+  
+  /* General text styling within project items */
+  .project-item p {
+    margin: 5px 0;
+    color: #555;
+  }
+
+/* Style for the project link button */
+.project-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    color: white;
+    background-color: #007bff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .project-link:hover {
+    background-color: #0056b3;
+  }
+  
+  
