@@ -4,6 +4,7 @@ import axios from 'axios';
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { userInput } = req.body;
+    console.log("User input:", userInput);
 
     try {
       const response = await axios.post(
@@ -23,6 +24,7 @@ export default async function handler(req, res) {
           },
         }
       );
+      console.log("OpenAI response:", response.data);
       res.status(200).json({ result: response.data.choices[0].message.content });
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch data' });
