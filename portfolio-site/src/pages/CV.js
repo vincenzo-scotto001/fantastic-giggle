@@ -7,7 +7,7 @@ const experiences = [
     title: "Senior Manager - Data Science",
     company: "KraftHeinz Company",
     time: "Aug. 2023 - Now",
-    description: "Here our team worked on long term forecasting (4+ months), and GenAI implementations!",
+    description: "Here our team worked on long term forecasting (4+ months), and GenAI implementations.",
     
   },
   {
@@ -15,7 +15,7 @@ const experiences = [
     title: "Manager - Data Science",
     company: "Venetian Las Vegas",
     time: "Feb. 2022 - Aug. 2023",
-    description: "Here our team successfully delivered the Venetian’s first DS/ML projects, like the ability to measure the worth of patrons!",
+    description: "Here our team successfully delivered the Venetian’s first DS/ML projects, like the ability to measure the worth of patrons.",
     
   },
   {
@@ -23,7 +23,7 @@ const experiences = [
     title: "Data Scientist",
     company: "DuPont/IFF Nutrition and Biosciences",
     time: "Jan. 2019 - Feb. 2022",
-    description: "Focused on real-time optimization projects, from pectin optimization to recipe optimization!",
+    description: "Focused on real-time optimization projects, from pectin optimization to recipe optimization.",
     
   },
 
