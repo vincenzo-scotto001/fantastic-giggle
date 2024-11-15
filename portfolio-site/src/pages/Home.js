@@ -37,8 +37,8 @@ function Home() {
     <div className="home">
       <h1>Welcome to my corner of the internet!</h1>
       <p>
-        Hi there! I’m Vincenzo Scotto Di Uccio, a full stack data scientist with a passion for building applications and bringing ideas to life. This website showcases 
-        my work, experiences, and projects. Feel free to explore and connect with me, or talk to my friend here that knows everything about me!
+      Hi there! I'm Vincenzo Scotto Di Uccio, a full stack data scientist passionate about building innovative applications. 
+      Feel free to explore my work and projects, or chat with my AI friend to learn more about me!
       </p> 
 
       <form onSubmit={handleSubmit}>
