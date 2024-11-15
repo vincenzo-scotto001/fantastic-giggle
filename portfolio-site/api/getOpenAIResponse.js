@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         },
         {
           headers: {
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, // Store key in environment variables on your host
+            Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`, // Store key in environment variables on your host
             'Content-Type': 'application/json',
           },
         }
