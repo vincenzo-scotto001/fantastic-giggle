@@ -23,7 +23,7 @@ function Home() {
     setLoading(true);
   
     try {
-      const response = await axios.post('/api/getOpenAiResponse', { userInput });
+      const response = await axios.post('/api', { userInput });
       setLlmResponse(response.data.result);
     } catch (error) {
       console.error('Error fetching data:', error);
