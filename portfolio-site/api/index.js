@@ -7,7 +7,7 @@ const pinecone = new Pinecone({
 
 async function getContext(userInput) {
   try {
-    // Get embedding from OpenAI
+    // Get embedding from OpenAI using api
     const embeddingResponse = await axios.post(
       'https://api.openai.com/v1/embeddings',
       {
