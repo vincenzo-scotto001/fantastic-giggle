@@ -1,22 +1,19 @@
 const axios = require('axios');
-const { PineconeClient } = require('@pinecone-database/pinecone');
+const { Pinecone } = require('@pinecone-database/pinecone');
 
-const pinecone = new PineconeClient();
+const pinecone = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY,
+  environment: process.env.PINECONE_ENVIRONMENT,
+});
 
 async function getContext(userInput) {
   try {
-    // Initialize Pinecone
-    await pinecone.init({
-      environment: process.env.PINECONE_ENVIRONMENT,
-      apiKey: process.env.PINECONE_API_KEY,
-    });
-
     // Get embedding from OpenAI
     const embeddingResponse = await axios.post(
       'https://api.openai.com/v1/embeddings',
       {
         input: userInput,
-        model: 'text-embedding-3-large',  // Using OpenAI's embedding model instead
+        model: 'text-embedding-3-large',
       },
       {
         headers: {
@@ -28,8 +25,8 @@ async function getContext(userInput) {
 
     const embedding = embeddingResponse.data.data[0].embedding;
 
-    // Query Pinecone
-    const index = pinecone.Index(process.env.PINECONE_INDEX_NAME);
+    // Query Pinecone using the new syntax
+    const index = pinecone.index(process.env.PINECONE_INDEX_NAME);
     const queryResponse = await index.query({
       vector: embedding,
       topK: 5,
@@ -39,7 +36,7 @@ async function getContext(userInput) {
     return queryResponse.matches.map(match => match.metadata.text).join('\n\n');
   } catch (error) {
     console.error('Context retrieval error:', error);
-    return '';  // Return empty context if retrieval fails
+    return ''; // Return empty context if retrieval fails
   }
 }
 
