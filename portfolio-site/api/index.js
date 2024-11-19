@@ -31,7 +31,13 @@ async function getContext(userInput) {
       topK: 5,
       includeMetadata: true,
     });
-
+    console.log('Matches with metadata:');
+    queryResponse.matches.forEach((match, index) => {
+      console.log(`Match ${index + 1}:`);
+      console.log('Score:', match.score);
+      console.log('Metadata:', match.metadata);
+      console.log('------------------------'); 
+    });
     return queryResponse.matches.map(match => match.metadata.text).join('\n\n');
   } catch (error) {
     console.error('Context retrieval error:', error);
