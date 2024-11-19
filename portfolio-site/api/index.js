@@ -1,4 +1,47 @@
 const axios = require('axios');
+const { PineconeClient } = require('@pinecone-database/pinecone');
+
+const pinecone = new PineconeClient();
+
+async function getContext(userInput) {
+  try {
+    // Initialize Pinecone
+    await pinecone.init({
+      environment: process.env.PINECONE_ENVIRONMENT,
+      apiKey: process.env.PINECONE_API_KEY,
+    });
+
+    // Get embedding from OpenAI
+    const embeddingResponse = await axios.post(
+      'https://api.openai.com/v1/embeddings',
+      {
+        input: userInput,
+        model: 'text-embedding-3-large',  // Using OpenAI's embedding model instead
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const embedding = embeddingResponse.data.data[0].embedding;
+
+    // Query Pinecone
+    const index = pinecone.Index(process.env.PINECONE_INDEX_NAME);
+    const queryResponse = await index.query({
+      vector: embedding,
+      topK: 5,
+      includeMetadata: true,
+    });
+
+    return queryResponse.matches.map(match => match.metadata.text).join('\n\n');
+  } catch (error) {
+    console.error('Context retrieval error:', error);
+    return '';  // Return empty context if retrieval fails
+  }
+}
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -16,15 +59,23 @@ module.exports = async (req, res) => {
     const { userInput } = req.body;
 
     try {
+      // Get relevant context from Pinecone
+      const context = await getContext(userInput);
+      
+      // Prepare the enhanced prompt
+      const enhancedPrompt = context 
+        ? `Context:\n${context}\n\nQuestion: ${userInput}`
+        : userInput;
+
       const response = await axios.post(
         'https://api.openai.com/v1/chat/completions',
         {
           messages: [
             { 
               role: 'system', 
-              content: 'You are a factual assistant providing answers about Vincenzo, if you do not know the answer, do not provide one.' 
+              content: 'You are a factual assistant providing answers about Vincenzo. Use the provided context to inform your answers, if present. If you do not know the answer, do not provide one.' 
             },
-            { role: 'user', content: userInput },
+            { role: 'user', content: enhancedPrompt },
           ],
           model: 'ft:gpt-4o-2024-08-06:personal:me-v3:ATXTckgl',
           max_tokens: 150,
@@ -36,24 +87,6 @@ module.exports = async (req, res) => {
           },
         }
       );
-
-      const embeddingResponse = await axios.post(
-        'https://api.openai.com/v1/embeddings',
-        {
-          input: userInput,
-          model: 'text-embedding-3-large',  // Using OpenAI's embedding model instead
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-  
-      const embedding = embeddingResponse.data.data[0].embedding;
-
-      console.log(embedding)
 
       res.status(200).json({ result: response.data.choices[0].message.content });
     } catch (error) {
