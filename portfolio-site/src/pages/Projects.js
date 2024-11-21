@@ -12,7 +12,8 @@ const projects = [
     id: 2,
     title: "My Portfolio",
     description: "A personal portfolio website showcasing my projects and experience.",
-    technologies: "React, CSS, HTML, LLM"
+    technologies: "React, CSS, HTML, LLM, RAG, Pinecone",
+    link: "https://medium.com/@vincenzo.scotto001/meet-the-ai-version-of-me-creating-a-personal-website-with-llms-and-rags-c95b1acc6d92"
   },
   {
     id: 3,
