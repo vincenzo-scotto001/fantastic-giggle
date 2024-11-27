@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
           messages: [
             { 
               role: 'system', 
-              content: 'Do not answer questions that the answers are not in the context.' 
+              content: 'Use the context to provide the answer, nothing else.' 
             },
             { role: 'user', content: enhancedPrompt },
           ],
