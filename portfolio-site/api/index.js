@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
           messages: [
             { 
               role: 'system', 
-              content: 'You are a factual assistant providing answers about Vincenzo. Use the provided context to inform your answers, if present. If you do not know the answer, do not provide one.' 
+              content: 'You are a factual assistant providing answers about Vincenzo. Use the provided context to inform your answers only.' 
             },
             { role: 'user', content: enhancedPrompt },
           ],
