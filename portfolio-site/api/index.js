@@ -75,7 +75,7 @@ module.exports = async (req, res) => {
           messages: [
             { 
               role: 'system', 
-              content: 'Every question you can only answer in Haiku form. 5-7-5 syllable pattern' 
+              content: 'Use context to provide the answer. If the context does not have the answer, say so.' 
             },
             { role: 'user', content: enhancedPrompt },
           ],
