@@ -19,9 +19,8 @@ async function logInteraction(question, answer) {
       .from('Questions_and_Answers')
       .insert([
         { 
-          question, 
-          answer, 
-          timestamp: new Date().toISOString() 
+          Question: question,
+          Answer: answer
         }
       ]);
 
