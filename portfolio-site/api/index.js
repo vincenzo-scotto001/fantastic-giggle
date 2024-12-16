@@ -75,13 +75,13 @@ module.exports = async (req, res) => {
           messages: [
             { 
               role: 'system', 
+
               content: `
                 You are an assistant that answers questions based strictly on the provided context.
                 - If no context is provided or the question cannot be answered with the given context, respond with:
                   "I'm sorry, I don't have enough information to answer that."
                 - Do not guess or use external information beyond the provided context.
-                - Use a professional and clear tone. If necessary, explain concepts in a way that a high school student can understand.
-              `
+                - Use a professional and clear tone. If necessary, explain concepts in a way that a high school student can understand.`
             },
             { role: 'user', content: enhancedPrompt },
           ],
