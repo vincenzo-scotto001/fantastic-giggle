@@ -22,9 +22,24 @@ async function logInteraction(question, answer) {
           Question: question,
           Answer: answer
         }
-      ]);
+      ])
+      .select();
 
-    if (error) console.error('Logging error:', error);
+      if (error) {
+        console.error('Supabase Logging Error:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          type: error.type          
+        });
+  
+        // Additional diagnostic logging
+        console.log('Supabase Connection Details:', {
+          url: process.env.SUPABASE_URL ? 'Configured' : 'Missing',
+          serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'Configured' : 'Missing'
+        });
+      }
   } catch (error) {
     console.error('Database logging failed:', error);
   }
