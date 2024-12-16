@@ -16,7 +16,7 @@ const pinecone = new Pinecone({
 async function logInteraction(question, answer) {
   try {
     const { error } = await supabase
-      .from('user_interactions')
+      .from('Questions_and_Answers')
       .insert([
         { 
           question, 
