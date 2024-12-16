@@ -1,35 +1,9 @@
 const axios = require('axios');
 const { Pinecone } = require('@pinecone-database/pinecone');
-const { createClient } = require('@supabase/supabase-js');
-
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.SUPABASE_URL, 
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
 
 const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY,
 });
-
-// New function to log interactions to Supabase
-async function logInteraction(question, answer) {
-  try {
-    const { error } = await supabase
-      .from('user_interactions')
-      .insert([
-        { 
-          question, 
-          answer, 
-          timestamp: new Date().toISOString() 
-        }
-      ]);
-
-    if (error) console.error('Logging error:', error);
-  } catch (error) {
-    console.error('Database logging failed:', error);
-  }
-}
 
 async function getContext(userInput) {
   try {
@@ -122,12 +96,7 @@ module.exports = async (req, res) => {
         }
       );
 
-      const answerText = response.data.choices[0].message.content;
-
-      // Log the interaction to Supabase
-      await logInteraction(userInput, answerText);
-
-      res.status(200).json({ result: answerText });
+      res.status(200).json({ result: response.data.choices[0].message.content });
     } catch (error) {
       console.error('Error:', error.response?.data || error.message);
       res.status(500).json({ error: 'Failed to fetch response' });
