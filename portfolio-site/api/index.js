@@ -13,7 +13,7 @@ const pinecone = new Pinecone({
 });
 
 // New function to log interactions to Supabase
-async function logInteraction(question, answer) {
+async function logInteraction(question, answer, context) {
   try {
     const { error } = await supabase
       .from('Questions_and_Answers')
@@ -21,7 +21,8 @@ async function logInteraction(question, answer) {
         { 
           Question: question,
           Answer: answer,
-          Datetime: new Date().toISOString()
+          Datetime: new Date().toISOString(),
+          Context: context
         }
       ])
       .select();
@@ -144,7 +145,7 @@ module.exports = async (req, res) => {
       const answerText = response.data.choices[0].message.content;
 
       // Log the interaction to Supabase
-      await logInteraction(userInput, answerText);
+      await logInteraction(userInput, answerText, context);
 
       res.status(200).json({ result: answerText });
     } catch (error) {
