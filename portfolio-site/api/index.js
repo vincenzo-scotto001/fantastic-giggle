@@ -20,7 +20,8 @@ async function logInteraction(question, answer) {
       .insert([
         { 
           Question: question,
-          Answer: answer
+          Answer: answer,
+          Datetime: new Date().toISOString()
         }
       ])
       .select();
