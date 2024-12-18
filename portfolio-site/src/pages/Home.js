@@ -27,7 +27,13 @@ function Home() {
       setLlmResponse(response.data.result);
     } catch (error) {
       console.error('Error fetching data:', error);
-      setLlmResponse('Sorry, something went wrong.');
+      
+      // Check if it's a 400 error with the specific message
+      if (error.response && error.response.status === 400) {
+        setLlmResponse(error.response.data.result || 'Please type a question.');
+      } else {
+        setLlmResponse('Sorry, something went wrong.');
+      }
     } finally {
       setLoading(false);
     }
@@ -45,7 +51,7 @@ function Home() {
         <textarea
           value={userInput}
           onChange={(e) => { handleInputChange(e); autoExpand(e); }} // Call autoExpand on change
-          placeholder="What is Vincenzo's favorite color?"
+          placeholder="Please ask me a question!"
           rows="1" // Initial row count
         />
         <br />

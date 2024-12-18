@@ -99,6 +99,10 @@ module.exports = async (req, res) => {
 
   if (req.method === 'POST') {
     const { userInput } = req.body;
+        // Check if userInput is empty
+      if (!userInput || userInput.trim() === '') {
+          return res.status(400).json({ result: "Please type a question." });
+        }
 
     try {
       // Get relevant context from Pinecone
