@@ -44,7 +44,7 @@ function Home() {
       <h1>Welcome to my corner of the internet!</h1>
       <p>
       Hi there! I'm Vincenzo Scotto Di Uccio, a full stack data scientist passionate about building innovative applications. 
-      Feel free to explore my work and projects, or chat with my AI friend to learn more about me!
+      Feel free to explore my work and projects, or chat with CenzGPT to learn more about me!
       </p> 
 
       <form onSubmit={handleSubmit}>
