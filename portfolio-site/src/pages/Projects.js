@@ -4,9 +4,10 @@ import '../styles/Projects.css';
 const projects = [
   {
     id: 1,
-    title: "TournyTracker",
+    title: "StackTrack",
     description: "A poker tournament tracking app with features for logging tournaments, buy-ins, and cash-outs.",
-    technologies: "React, TypeScript, Firebase"
+    technologies: "React, Supabase",
+    link: "https://stacktrack.vercel.app"
   },
   {
     id: 2,
