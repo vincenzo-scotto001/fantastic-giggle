@@ -4,7 +4,7 @@ import '../styles/CV.css';
 const experiences = [
   {
     id: 1,
-    title: "Senior Manager - Data Science",
+    title: "Head of Long-term Forecasting",
     company: "KraftHeinz Company",
     time: "Aug. 2023 - Now",
     description: "Here our team worked on long term forecasting (4+ months), and GenAI implementations.",
@@ -12,7 +12,7 @@ const experiences = [
   },
   {
     id: 2,
-    title: "Manager - Data Science",
+    title: "Head of Data Science",
     company: "Venetian Las Vegas",
     time: "Feb. 2022 - Aug. 2023",
     description: "Here our team successfully delivered the Venetian’s first DS/ML projects, like the ability to measure the worth of patrons.",
@@ -20,7 +20,7 @@ const experiences = [
   },
   {
     id: 3,
-    title: "Data Scientist",
+    title: "Lead Data Scientist",
     company: "DuPont/IFF Nutrition and Biosciences",
     time: "Jan. 2019 - Feb. 2022",
     description: "Focused on real-time optimization projects, from pectin optimization to recipe optimization.",
