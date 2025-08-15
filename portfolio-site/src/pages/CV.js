@@ -4,29 +4,35 @@ import '../styles/CV.css';
 const experiences = [
   {
     id: 1,
-    title: "Head of Long-term Forecasting",
-    company: "KraftHeinz Company",
-    time: "Aug. 2023 - Now",
-    description: "Here our team worked on long term forecasting (4+ months), and GenAI implementations.",
+    title: "Associate Director of Data Science",
+    company: "Publicis Groupe",
+    time: "April 2025 - Now",
+    description: "Here I lead our the analytics of LAL, propensity and predictive models. I am also leading the charge on automation and GenAI initiatives.",
     
   },
   {
     id: 2,
-    title: "Head of Data Science",
-    company: "Venetian Las Vegas",
-    time: "Feb. 2022 - Aug. 2023",
-    description: "Here our team successfully delivered the Venetian’s first DS/ML projects, like the ability to measure the worth of patrons.",
-    
+    title: "Head of Long-term Forecasting",
+    company: "KraftHeinz Company",
+    time: "Aug. 2023 - Now",
+    description: "Here our team worked on long term forecasting (4+ months), and GenAI implementations.",
   },
   {
     id: 3,
+    title: "Head of Data Science",
+    company: "Venetian Las Vegas",
+    time: "Feb. 2022 - Aug. 2023",
+    description: "Here our team successfully delivered the Venetian’s first DS/ML projects, like the ability to measure the worth of patrons or the ability to forecast housekeeper need.",
+    
+  },
+  {
+    id: 4,
     title: "Lead Data Scientist",
     company: "DuPont/IFF Nutrition and Biosciences",
     time: "Jan. 2019 - Feb. 2022",
     description: "Focused on real-time optimization projects, from pectin optimization to recipe optimization.",
     
   },
-
 ];
 
 const education = [
