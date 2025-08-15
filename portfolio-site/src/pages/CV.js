@@ -64,7 +64,7 @@ function CV() {
     <div className="cv-container">
       <h1>Curriculum Vitae</h1>
       <p>Download my resume below:</p>
-      <a href="portfolio-site/public/VSDU_CV_07_18_2025.pdf" download>
+      <a href="public/VSDU_CV_07_18_2025.pdf" download>
         <button>Download Resume</button>
       </a>
 {/* Experience Section */}
