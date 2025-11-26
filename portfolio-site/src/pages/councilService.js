@@ -193,7 +193,7 @@ class CouncilDebateService {
           'Authorization': `Bearer ${this.apiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo', // Using 3.5 for better compatibility
+          model: 'gpt-4-turbo',
           messages: [
             {
               role: 'system',
@@ -278,7 +278,7 @@ class CouncilDebateService {
           'Authorization': `Bearer ${this.apiKey}`
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo', // Using 3.5 for reliability
+          model: 'gpt-4-turbo',
           messages: [
             {
               role: 'user',
@@ -286,7 +286,7 @@ class CouncilDebateService {
             }
           ],
           temperature: 0.7,
-          max_tokens: 200
+          max_tokens: 150
         })
       });
 
