@@ -87,7 +87,7 @@ const CouncilOfEldersWithAPI = () => {
     }
 
     // Debug API key configuration - Check both possible key names
-    const apiKey = process.env.REACT_APP_ELDERS_KEY || process.env.REACT_APP_OPENAI_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
     console.log('Environment check:', {
       hasApiKey: !!apiKey,
       keyLength: apiKey ? apiKey.length : 0,
