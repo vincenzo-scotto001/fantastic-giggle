@@ -3,7 +3,7 @@
 class CouncilDebateService {
   constructor() {
     // Support both possible environment variable names
-    this.apiKey = process.env.REACT_APP_ELDERS_KEY || process.env.REACT_APP_OPENAI_API_KEY;
+    this.apiKey = process.env.OPENAI_API_KEY;
     this.apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   }

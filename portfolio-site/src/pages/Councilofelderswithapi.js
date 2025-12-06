@@ -86,22 +86,6 @@ const CouncilOfEldersWithAPI = () => {
       return;
     }
 
-    // Debug API key configuration - Check both possible key names
-    const apiKey = process.env.OPENAI_API_KEY;
-    console.log('Environment check:', {
-      hasApiKey: !!apiKey,
-      keyLength: apiKey ? apiKey.length : 0,
-      keyPrefix: apiKey ? apiKey.substring(0, 7) : 'not set',
-      allEnvKeys: Object.keys(process.env).filter(key => key.startsWith('REACT_APP'))
-    });
-
-    // Check for API key
-    if (!apiKey || apiKey === 'your-api-key-here') {
-      alert('OpenAI API key not configured properly. Please check your .env file and restart the app.');
-      startMockDebate();
-      return;
-    }
-
     // Reset debate state
     setDebateMessages([]);
     setShowResults(false);
