@@ -40,19 +40,7 @@ const CouncilOfEldersWithAPI = () => {
   const [debateService] = useState(() => new CouncilDebateService());
 
   // State management
-  const [eldersList, setEldersList] = useState(() => {
-    // Load saved points from localStorage if available
-    const saved = localStorage.getItem('councilElderPoints');
-    if (saved) {
-      const savedPoints = JSON.parse(saved);
-      return elders.map(elder => ({
-        ...elder,
-        points: savedPoints[elder.id] || 0
-      }));
-    }
-    return elders;
-  });
-
+  const [eldersList, setEldersList] = useState(elders);
   const [question, setQuestion] = useState('');
   const [debateMessages, setDebateMessages] = useState([]);
   const [selectedElders, setSelectedElders] = useState([]);
@@ -61,21 +49,75 @@ const CouncilOfEldersWithAPI = () => {
   const [showResults, setShowResults] = useState(false);
   const [winningAnswer, setWinningAnswer] = useState(null);
   const [finalAnswer, setFinalAnswer] = useState('');
-  const [leaderboard, setLeaderboard] = useState([...eldersList].sort((a, b) => b.points - a.points));
+  const [leaderboard, setLeaderboard] = useState([]);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [votingDetails, setVotingDetails] = useState(null);
+  const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(true);
   
   const debateContainerRef = useRef(null);
   const timerIntervalRef = useRef(null);
 
-  // Save points to localStorage whenever they change
+  // Fetch leaderboard from Supabase on mount and after updates
+  const fetchLeaderboard = async () => {
+    setIsLoadingLeaderboard(true);
+    try {
+      const response = await fetch('/api?action=getLeaderboard');
+      const data = await response.json();
+      
+      if (data.elders) {
+        // Merge Supabase data with local elder definitions
+        const mergedElders = eldersList.map(elder => {
+          const supabaseElder = data.elders.find(e => e.id === elder.id);
+          return {
+            ...elder,
+            points: supabaseElder ? supabaseElder.points : 0
+          };
+        });
+        
+        setEldersList(mergedElders);
+        setLeaderboard(mergedElders.sort((a, b) => b.points - a.points));
+      }
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      setLeaderboard([...eldersList].sort((a, b) => b.points - a.points));
+    } finally {
+      setIsLoadingLeaderboard(false);
+    }
+  };
+
+  // Fetch leaderboard on component mount
   useEffect(() => {
-    const points = {};
-    eldersList.forEach(elder => {
-      points[elder.id] = elder.points;
-    });
-    localStorage.setItem('councilElderPoints', JSON.stringify(points));
-  }, [eldersList]);
+    fetchLeaderboard();
+    // Refresh leaderboard every 30 seconds
+    const interval = setInterval(fetchLeaderboard, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Update elder points in Supabase
+  const updateElderPointsInSupabase = async (winner) => {
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'updatePoints',
+          data: {
+            elderName: winner.name,
+            elderId: winner.id
+          }
+        })
+      });
+
+      if (response.ok) {
+        // Refresh leaderboard after updating points
+        await fetchLeaderboard();
+      }
+    } catch (error) {
+      console.error('Error updating points in Supabase:', error);
+    }
+  };
 
   // Start debate with OpenAI integration
   const startDebate = async () => {
@@ -137,18 +179,8 @@ const CouncilOfEldersWithAPI = () => {
 
             const winner = selected.find(e => e.name === votingResult.winner);
             if (winner) {
-              // Update points
-              setEldersList(prev => prev.map(elder => 
-                elder.id === winner.id ? { ...elder, points: elder.points + 1 } : elder
-              ));
-
-              // Update leaderboard
-              setLeaderboard(prev => {
-                const updated = prev.map(elder => 
-                  elder.id === winner.id ? { ...elder, points: elder.points + 1 } : elder
-                );
-                return updated.sort((a, b) => b.points - a.points);
-              });
+              // Update points in Supabase
+              await updateElderPointsInSupabase(winner);
 
               // Generate final answer
               const summary = await debateService.generateDebateSummary(
@@ -194,16 +226,6 @@ const CouncilOfEldersWithAPI = () => {
     if (e.key === 'Enter' && !e.shiftKey && !isDebating) {
       e.preventDefault();
       startDebate();
-    }
-  };
-
-  // Reset the council (clear all points)
-  const resetCouncil = () => {
-    if (window.confirm('Are you sure you want to reset all elder points? This cannot be undone.')) {
-      const resetElders = eldersList.map(elder => ({ ...elder, points: 0 }));
-      setEldersList(resetElders);
-      setLeaderboard(resetElders);
-      localStorage.removeItem('councilElderPoints');
     }
   };
 
@@ -326,43 +348,51 @@ const CouncilOfEldersWithAPI = () => {
 
       {/* Right Panel - Leaderboard */}
       <div className="leaderboard-panel">
-        <h2>Elder Standings</h2>
-        <div className="leaderboard-container">
-          <table className="leaderboard-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Elder</th>
-                <th>Points</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leaderboard.slice(0, 15).map((elder, index) => (
-                <tr key={elder.id} className={index < 3 ? `rank-${index + 1}` : ''}>
-                  <td className="rank">
-                    {index === 0 && '🥇'}
-                    {index === 1 && '🥈'}
-                    {index === 2 && '🥉'}
-                    {index > 2 && index + 1}
-                  </td>
-                  <td className="leader-name">{elder.name}</td>
-                  <td className="points">{elder.points}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {leaderboard.length > 15 && (
-            <div className="leaderboard-more">
-              ... and {leaderboard.length - 15} more
-            </div>
+        <h2>
+          Global Standings
+          {!isLoadingLeaderboard && (
+            <span style={{ fontSize: '12px', marginLeft: '10px', color: '#718096' }}>
+              (Live)
+            </span>
           )}
-          <button 
-            className="reset-button" 
-            onClick={resetCouncil}
-            style={{ marginTop: '10px', padding: '8px', width: '100%' }}
-          >
-            Reset All Points
-          </button>
+        </h2>
+        <div className="leaderboard-container">
+          {isLoadingLeaderboard ? (
+            <div style={{ padding: '20px', textAlign: 'center', color: '#718096' }}>
+              Loading leaderboard...
+            </div>
+          ) : (
+            <>
+              <table className="leaderboard-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Elder</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leaderboard.slice(0, 15).map((elder, index) => (
+                    <tr key={elder.id} className={index < 3 ? `rank-${index + 1}` : ''}>
+                      <td className="rank">
+                        {index === 0 && '🥇'}
+                        {index === 1 && '🥈'}
+                        {index === 2 && '🥉'}
+                        {index > 2 && index + 1}
+                      </td>
+                      <td className="leader-name">{elder.name}</td>
+                      <td className="points">{elder.points}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {leaderboard.length > 15 && (
+                <div className="leaderboard-more">
+                  ... and {leaderboard.length - 15} more
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
