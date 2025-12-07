@@ -163,10 +163,13 @@ h2 {
 .debate-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal overflow */
   padding: 20px;
   background: #f7fafc;
   border-radius: 8px;
   min-height: 400px;
+  word-wrap: break-word; /* Ensure long words break */
+  overflow-wrap: break-word; /* Modern version of word-wrap */
 }
 
 .debate-placeholder {
@@ -219,6 +222,9 @@ h2 {
   padding: 12px 16px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: calc(100% - 57px); /* Ensure content doesn't overflow */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .elder-name-label {
@@ -231,6 +237,73 @@ h2 {
 .message-text {
   color: #2d3748;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto; /* Allow hyphenation for very long words */
+}
+
+/* Typing Indicator */
+.typing-indicator {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.typing-indicator .elder-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.typing-bubble {
+  background: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 60px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #667eea;
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
 }
 
 /* System Messages */
@@ -274,6 +347,38 @@ h2 {
 .debate-results p {
   color: #2c5282;
   margin: 5px 0;
+}
+
+.voting-details {
+  font-size: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.final-answer {
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  text-align: left;
+}
+
+.final-answer h4 {
+  color: #1a365d;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.final-answer p {
+  color: #2c5282;
+  line-height: 1.5;
+}
+
+.points-awarded {
+  margin-top: 10px;
+  font-weight: 600;
+  color: #22543d;
 }
 
 /* Leaderboard */
@@ -359,6 +464,20 @@ h2 {
   font-style: italic;
 }
 
+.reset-button {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.reset-button:hover {
+  background: #c53030;
+}
+
 /* Responsive Design */
 @media (max-width: 1400px) {
   .council-container {
@@ -401,18 +520,6 @@ h2 {
 .debate-container::-webkit-scrollbar-thumb:hover,
 .leaderboard-container::-webkit-scrollbar-thumb:hover {
   background: #a0aec0;
-}
-
-/* Loading Animation for Streaming Text */
-@keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-.streaming-text {
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typewriter 2s steps(40) forwards;
 }
 
 /* Pulse animation for active debate */

@@ -57,13 +57,11 @@ const CouncilOfEldersWithAPI = () => {
   const [debateMessages, setDebateMessages] = useState([]);
   const [selectedElders, setSelectedElders] = useState([]);
   const [isDebating, setIsDebating] = useState(false);
-  const [currentSpeaker, setCurrentSpeaker] = useState(null);
-  const [streamingMessage, setStreamingMessage] = useState('');
+  const [typingElder, setTypingElder] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [winningAnswer, setWinningAnswer] = useState(null);
   const [finalAnswer, setFinalAnswer] = useState('');
   const [leaderboard, setLeaderboard] = useState([...eldersList].sort((a, b) => b.points - a.points));
-  const [debateTimer, setDebateTimer] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [votingDetails, setVotingDetails] = useState(null);
   
@@ -93,6 +91,7 @@ const CouncilOfEldersWithAPI = () => {
     setFinalAnswer('');
     setIsDebating(true);
     setElapsedTime(0);
+    setTypingElder(null);
 
     // Start timer
     timerIntervalRef.current = setInterval(() => {
@@ -110,20 +109,17 @@ const CouncilOfEldersWithAPI = () => {
         question,
         selected,
         {
-          onElderSpeak: (elder, message, isComplete) => {
-            if (!isComplete) {
-              setCurrentSpeaker(elder);
-              setStreamingMessage(message);
-            } else {
-              setDebateMessages(prev => [...prev, {
-                type: 'elder',
-                elder: elder,
-                content: message,
-                timestamp: new Date()
-              }]);
-              setCurrentSpeaker(null);
-              setStreamingMessage('');
-            }
+          onElderTyping: (elder) => {
+            setTypingElder(elder);
+          },
+          onElderSpeak: (elder, message) => {
+            setTypingElder(null);
+            setDebateMessages(prev => [...prev, {
+              type: 'elder',
+              elder: elder,
+              content: message,
+              timestamp: new Date()
+            }]);
           },
           onSystemMessage: (message) => {
             setDebateMessages(prev => [...prev, {
@@ -136,7 +132,7 @@ const CouncilOfEldersWithAPI = () => {
             // Stop timer
             clearInterval(timerIntervalRef.current);
             
-            // voting details
+            // Store voting details
             setVotingDetails(votingResult);
 
             const winner = selected.find(e => e.name === votingResult.winner);
@@ -174,14 +170,9 @@ const CouncilOfEldersWithAPI = () => {
       console.error('Debate error:', error);
       alert('An error occurred during the debate. Please try again.');
       setIsDebating(false);
+      setTypingElder(null);
       clearInterval(timerIntervalRef.current);
     }
-  };
-
-  // Fallback mock debate for testing without API
-  const startMockDebate = () => {
-    // Implementation of mock debate (same as original)
-    // ... (keeping the original mock implementation for testing)
   };
 
   // Format elapsed time
@@ -196,7 +187,7 @@ const CouncilOfEldersWithAPI = () => {
     if (debateContainerRef.current) {
       debateContainerRef.current.scrollTop = debateContainerRef.current.scrollHeight;
     }
-  }, [debateMessages, streamingMessage]);
+  }, [debateMessages, typingElder]);
 
   // Handle Enter key submission
   const handleKeyPress = (e) => {
@@ -272,7 +263,7 @@ const CouncilOfEldersWithAPI = () => {
 
         {/* Debate Display */}
         <div className="debate-container" ref={debateContainerRef}>
-          {debateMessages.length === 0 && !currentSpeaker && (
+          {debateMessages.length === 0 && !typingElder && (
             <div className="debate-placeholder">
               The council awaits your question...
             </div>
@@ -297,15 +288,16 @@ const CouncilOfEldersWithAPI = () => {
             </div>
           ))}
 
-          {/* Streaming message display */}
-          {currentSpeaker && streamingMessage && (
-            <div className="debate-message elder">
+          {/* Typing indicator */}
+          {typingElder && (
+            <div className="typing-indicator">
               <div className="elder-avatar">
-                {currentSpeaker.name.split(' ').map(word => word[0]).join('')}
+                {typingElder.name.split(' ').map(word => word[0]).join('')}
               </div>
-              <div className="message-content">
-                <div className="elder-name-label">{currentSpeaker.name}</div>
-                <div className="message-text streaming-text">{streamingMessage}</div>
+              <div className="typing-bubble">
+                <div className="typing-dot"></div>
+                <div className="typing-dot"></div>
+                <div className="typing-dot"></div>
               </div>
             </div>
           )}

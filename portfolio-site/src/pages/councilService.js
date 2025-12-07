@@ -68,40 +68,41 @@ class CouncilDebateService {
 
   // Orchestrate the full debate
   async orchestrateDebate(question, selectedElders, callbacks) {
-    const { onElderSpeak, onSystemMessage, onDebateComplete } = callbacks;
+    const { onElderTyping, onElderSpeak, onSystemMessage, onDebateComplete } = callbacks;
     const debateMessages = [];
     const speakingOrder = this.determineSpeakingOrder(selectedElders);
     
     // Initial system message
     onSystemMessage(`The Council convenes to discuss: "${question}"`);
+    await this.delay(1500);
 
     // Each elder speaks in turn
     for (let round = 0; round < 2; round++) { // 2 rounds of discussion
       for (const elder of speakingOrder) {
-        const context = this.createDebateContext(question, selectedElders, debateMessages);
+        // Show typing indicator
+        onElderTyping(elder);
+        
+        // Add random typing delay (1.5-3 seconds) for realism
+        const typingDelay = 1500 + Math.random() * 1500;
+        await this.delay(typingDelay);
         
         // Get the elder's response from the API
+        const context = this.createDebateContext(question, selectedElders, debateMessages);
         const response = await this.getElderResponse(elder, question, context);
         
-        // Simulate typing effect for better UX
-        let currentMessage = '';
-        const words = response.split(' ');
-        
-        for (let i = 0; i < words.length; i++) {
-          currentMessage += (i > 0 ? ' ' : '') + words[i];
-          onElderSpeak(elder, currentMessage, false);
-          await this.delay(50); // Slight delay between words
-        }
-        
+        // Hide typing indicator and show complete message
+        onElderSpeak(elder, response);
         debateMessages.push({ elder: elder.name, content: response });
-        onElderSpeak(elder, response, true); // Message complete
         
         // Add delay between speakers for realism
-        await this.delay(1500);
+        await this.delay(1000);
       }
     }
 
     // Conduct voting
+    onSystemMessage(`The Council is deliberating...`);
+    await this.delay(2000);
+    
     const votingResult = await this.conductVoting(question, selectedElders, debateMessages);
     onSystemMessage(`The Council has reached a decision...`);
     
