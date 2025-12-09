@@ -1,12 +1,27 @@
-/* Main container layout */
+/* CSS Variables for responsive scaling */
+:root {
+  --nav-height: 60px;
+  --panel-gap: clamp(10px, 2vw, 20px);
+  --panel-padding: clamp(8px, 1.5vw, 20px);
+  --text-xs: clamp(11px, 1.1vw, 13px);
+  --text-sm: clamp(12px, 1.2vw, 14px);
+  --text-base: clamp(14px, 1.4vw, 16px);
+  --text-lg: clamp(16px, 1.6vw, 20px);
+  --text-xl: clamp(20px, 2vw, 24px);
+  --text-2xl: clamp(24px, 2.5vw, 32px);
+}
+
+/* Main container - responsive grid layout */
 .council-container {
-  display: flex;
-  height: calc(100vh - 60px);
-  width: 100%;
-  gap: 20px;
-  padding: 10px;
+  display: grid;
+  grid-template-columns: minmax(280px, 30%) 1fr minmax(250px, 25%);
+  height: calc(100vh - var(--nav-height));
+  max-height: 100vh;
+  gap: var(--panel-gap);
+  padding: var(--panel-padding);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* Common panel styles */
@@ -14,39 +29,24 @@
 .debate-panel,
 .leaderboard-panel {
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  padding: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-radius: clamp(10px, 1.5vw, 15px);
+  padding: var(--panel-padding);
+  box-shadow: 0 clamp(5px, 1vw, 10px) clamp(15px, 3vw, 30px) rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0;
 }
 
-/* Panel widths */
-.elders-panel {
-  flex: 0 0 30%;
-  min-width: 350px;
-}
-
-.debate-panel {
-  flex: 1;
-  min-width: 400px;
-}
-
-.leaderboard-panel {
-  flex: 0 0 25%;
-  min-width: 300px;
-}
-
-/* Headers */
+/* Headers - responsive sizing */
 h2 {
-  margin: 0 0 20px 0;
+  margin: 0 0 clamp(10px, 2vh, 20px) 0;
   color: #2d3748;
-  font-size: 24px;
+  font-size: var(--text-xl);
   font-weight: 700;
   text-align: center;
   border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 10px;
+  padding-bottom: clamp(5px, 1vh, 10px);
 }
 
 /* Elders Table */
@@ -54,11 +54,13 @@ h2 {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
+  min-height: 0;
 }
 
 .elders-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: var(--text-sm);
 }
 
 .elders-table thead {
@@ -69,15 +71,16 @@ h2 {
 }
 
 .elders-table th {
-  padding: 12px;
+  padding: clamp(8px, 1.2vh, 12px);
   text-align: left;
   font-weight: 600;
   color: #4a5568;
   border-bottom: 2px solid #e2e8f0;
+  font-size: var(--text-sm);
 }
 
 .elders-table td {
-  padding: 10px 12px;
+  padding: clamp(6px, 1vh, 10px) clamp(8px, 1.2vh, 12px);
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -100,29 +103,39 @@ h2 {
   font-weight: 600;
   color: #2d3748;
   white-space: nowrap;
+  font-size: var(--text-sm);
 }
 
 .elder-description {
-  font-size: 13px;
+  font-size: var(--text-xs);
   color: #4a5568;
   line-height: 1.4;
 }
 
 /* Debate Panel */
+.debate-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .question-input-container {
-  margin-bottom: 20px;
+  margin-bottom: clamp(10px, 2vh, 20px);
+  flex-shrink: 0;
 }
 
 .question-input {
   width: 100%;
-  padding: 12px;
+  padding: clamp(8px, 1.2vh, 12px);
   border: 2px solid #e2e8f0;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   resize: vertical;
-  min-height: 60px;
+  min-height: clamp(40px, 6vh, 60px);
+  max-height: clamp(80px, 12vh, 120px);
   font-family: inherit;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .question-input:focus {
@@ -137,13 +150,13 @@ h2 {
 
 .submit-button {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+  padding: clamp(8px, 1.2vh, 12px);
+  margin-top: clamp(5px, 1vh, 10px);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s, opacity 0.2s;
@@ -159,30 +172,30 @@ h2 {
   cursor: not-allowed;
 }
 
-/* Debate Container */
+/* Debate Container - responsive height */
 .debate-container {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden; /* Prevent horizontal overflow */
-  padding: 20px;
+  overflow-x: hidden;
+  padding: clamp(10px, 2vw, 20px);
   background: #f7fafc;
   border-radius: 8px;
-  min-height: 400px;
-  word-wrap: break-word; /* Ensure long words break */
-  overflow-wrap: break-word; /* Modern version of word-wrap */
+  min-height: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .debate-placeholder {
   text-align: center;
   color: #a0aec0;
   font-style: italic;
-  margin-top: 100px;
-  font-size: 18px;
+  margin-top: clamp(50px, 10vh, 100px);
+  font-size: var(--text-lg);
 }
 
 /* Debate Messages */
 .debate-message {
-  margin-bottom: 20px;
+  margin-bottom: clamp(10px, 2vh, 20px);
   animation: fadeIn 0.5s ease-in;
 }
 
@@ -199,12 +212,12 @@ h2 {
 
 .debate-message.elder {
   display: flex;
-  gap: 12px;
+  gap: clamp(8px, 1.2vw, 12px);
 }
 
 .elder-avatar {
-  width: 45px;
-  height: 45px;
+  width: clamp(35px, 4vw, 45px);
+  height: clamp(35px, 4vw, 45px);
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -212,17 +225,17 @@ h2 {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 14px;
+  font-size: clamp(10px, 1.2vw, 14px);
   flex-shrink: 0;
 }
 
 .message-content {
   flex: 1;
   background: white;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: clamp(8px, 1.2vh, 12px) clamp(12px, 1.6vw, 16px);
+  border-radius: clamp(8px, 1.2vw, 12px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  max-width: calc(100% - 57px); /* Ensure content doesn't overflow */
+  max-width: calc(100% - clamp(43px, 5vw, 57px));
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -231,53 +244,40 @@ h2 {
   font-weight: 600;
   color: #4a5568;
   margin-bottom: 4px;
-  font-size: 13px;
+  font-size: var(--text-xs);
 }
 
 .message-text {
   color: #2d3748;
   line-height: 1.5;
+  font-size: var(--text-sm);
   word-wrap: break-word;
   overflow-wrap: break-word;
-  hyphens: auto; /* Allow hyphenation for very long words */
+  hyphens: auto;
 }
 
 /* Typing Indicator */
 .typing-indicator {
   display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: clamp(8px, 1.2vw, 12px);
+  margin-bottom: clamp(10px, 2vh, 20px);
   animation: fadeIn 0.3s ease-in;
-}
-
-.typing-indicator .elder-avatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  flex-shrink: 0;
 }
 
 .typing-bubble {
   background: white;
-  padding: 12px 16px;
-  border-radius: 12px;
+  padding: clamp(8px, 1.2vh, 12px) clamp(12px, 1.6vw, 16px);
+  border-radius: clamp(8px, 1.2vw, 12px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   gap: 4px;
-  min-width: 60px;
+  min-width: clamp(50px, 6vw, 60px);
 }
 
 .typing-dot {
-  width: 8px;
-  height: 8px;
+  width: clamp(6px, 0.8vw, 8px);
+  height: clamp(6px, 0.8vw, 8px);
   border-radius: 50%;
   background: #667eea;
   animation: typingBounce 1.4s infinite ease-in-out;
@@ -309,21 +309,22 @@ h2 {
 /* System Messages */
 .system-message {
   text-align: center;
-  padding: 12px 20px;
+  padding: clamp(8px, 1.2vh, 12px) clamp(15px, 2vw, 20px);
   background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
   color: white;
   border-radius: 8px;
   font-weight: 500;
-  margin: 20px auto;
+  font-size: var(--text-sm);
+  margin: clamp(10px, 2vh, 20px) auto;
   max-width: 80%;
 }
 
 /* Debate Results */
 .debate-results {
   background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
+  border-radius: clamp(8px, 1.2vw, 12px);
+  padding: clamp(15px, 2vh, 20px);
+  margin-top: clamp(10px, 2vh, 20px);
   text-align: center;
   animation: slideUp 0.5s ease-out;
 }
@@ -341,24 +342,26 @@ h2 {
 
 .debate-results h3 {
   color: #1a365d;
-  margin-bottom: 10px;
+  margin-bottom: clamp(5px, 1vh, 10px);
+  font-size: var(--text-lg);
 }
 
 .debate-results p {
   color: #2c5282;
   margin: 5px 0;
+  font-size: var(--text-sm);
 }
 
 .voting-details {
-  font-size: 14px;
-  margin-top: 10px;
-  padding-top: 10px;
+  font-size: var(--text-sm);
+  margin-top: clamp(5px, 1vh, 10px);
+  padding-top: clamp(5px, 1vh, 10px);
   border-top: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .final-answer {
-  margin-top: 15px;
-  padding: 15px;
+  margin-top: clamp(10px, 1.5vh, 15px);
+  padding: clamp(10px, 1.5vh, 15px);
   background: rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   text-align: left;
@@ -367,29 +370,33 @@ h2 {
 .final-answer h4 {
   color: #1a365d;
   margin-bottom: 8px;
-  font-size: 16px;
+  font-size: var(--text-base);
 }
 
 .final-answer p {
   color: #2c5282;
   line-height: 1.5;
+  font-size: var(--text-sm);
 }
 
 .points-awarded {
-  margin-top: 10px;
+  margin-top: clamp(5px, 1vh, 10px);
   font-weight: 600;
   color: #22543d;
+  font-size: var(--text-sm);
 }
 
 /* Leaderboard */
 .leaderboard-container {
   flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: var(--text-sm);
 }
 
 .leaderboard-table thead {
@@ -400,15 +407,16 @@ h2 {
 }
 
 .leaderboard-table th {
-  padding: 12px;
+  padding: clamp(8px, 1.2vh, 12px);
   text-align: left;
   font-weight: 600;
   color: #4a5568;
   border-bottom: 2px solid #e2e8f0;
+  font-size: var(--text-sm);
 }
 
 .leaderboard-table td {
-  padding: 10px 12px;
+  padding: clamp(6px, 1vh, 10px) clamp(8px, 1.2vh, 12px);
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -418,88 +426,184 @@ h2 {
 
 /* Medal highlights */
 .leaderboard-table tr.rank-1 {
-  background: linear-gradient(90deg, #ffd700 0%, transparent 100%);
-  background-size: 200% 100%;
-  animation: shimmer 3s infinite;
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.3) 0%, transparent 100%);
 }
 
 .leaderboard-table tr.rank-2 {
-  background: linear-gradient(90deg, #c0c0c0 0%, transparent 100%);
-  background-size: 200% 100%;
-  animation: shimmer 3s infinite;
+  background: linear-gradient(90deg, rgba(192, 192, 192, 0.3) 0%, transparent 100%);
 }
 
 .leaderboard-table tr.rank-3 {
-  background: linear-gradient(90deg, #cd7f32 0%, transparent 100%);
-  background-size: 200% 100%;
-  animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.3) 0%, transparent 100%);
 }
 
 .rank {
   font-weight: 700;
   text-align: center;
-  font-size: 16px;
+  font-size: var(--text-base);
 }
 
 .leader-name {
   font-weight: 600;
   color: #2d3748;
+  font-size: var(--text-sm);
 }
 
 .points {
   font-weight: 700;
   color: #667eea;
   text-align: center;
+  font-size: var(--text-sm);
 }
 
 .leaderboard-more {
   text-align: center;
-  padding: 10px;
+  padding: clamp(5px, 1vh, 10px);
   color: #718096;
   font-style: italic;
+  font-size: var(--text-xs);
 }
 
-.reset-button {
-  background: #e53e3e;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.reset-button:hover {
-  background: #c53030;
-}
-
-/* Responsive Design */
-@media (max-width: 1400px) {
+/* Tablet View (768px - 1200px) */
+@media (max-width: 1200px) {
   .council-container {
-    flex-direction: column;
+    grid-template-columns: minmax(250px, 28%) 1fr minmax(220px, 24%);
+  }
+  
+  :root {
+    --text-xs: 12px;
+    --text-sm: 13px;
+    --text-base: 15px;
+    --text-lg: 18px;
+    --text-xl: 22px;
+  }
+}
+
+/* Small Laptop/Large Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .council-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .elders-panel {
+    max-height: 30vh;
+    order: 1;
+  }
+
+  .debate-panel {
+    order: 2;
+    min-height: 40vh;
+  }
+
+  .leaderboard-panel {
+    max-height: 30vh;
+    order: 3;
+  }
+}
+
+/* Mobile View (max-width: 768px) */
+@media (max-width: 768px) {
+  .council-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
     height: auto;
+    min-height: 100vh;
+    gap: 10px;
+    padding: 10px;
   }
 
   .elders-panel,
   .debate-panel,
   .leaderboard-panel {
-    flex: 1;
-    width: 100%;
-    min-width: unset;
-    max-height: 500px;
+    max-height: none;
+    min-height: 300px;
+  }
+
+  .debate-panel {
+    min-height: 400px;
+  }
+
+  /* Adjust avatar size on mobile */
+  .elder-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Hide long descriptions on mobile */
+  .elder-description {
+    display: none;
+  }
+
+  /* Simplify table on mobile */
+  .elders-table th:nth-child(2),
+  .elders-table td:nth-child(2) {
+    display: none;
   }
 }
 
-/* Scrollbar Styling */
+/* Very Small Screens (max-width: 480px) */
+@media (max-width: 480px) {
+  :root {
+    --panel-padding: 8px;
+    --text-xs: 11px;
+    --text-sm: 12px;
+    --text-base: 14px;
+    --text-lg: 16px;
+    --text-xl: 18px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+
+  .submit-button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* Large Desktop (min-width: 1920px) */
+@media (min-width: 1920px) {
+  .council-container {
+    max-width: 1920px;
+    margin: 0 auto;
+  }
+
+  :root {
+    --text-xs: 13px;
+    --text-sm: 14px;
+    --text-base: 16px;
+    --text-lg: 20px;
+    --text-xl: 24px;
+    --text-2xl: 32px;
+  }
+}
+
+/* Ultra-wide screens (min-width: 2560px) */
+@media (min-width: 2560px) {
+  .council-container {
+    max-width: 2400px;
+    margin: 0 auto;
+  }
+
+  :root {
+    --text-xs: 14px;
+    --text-sm: 15px;
+    --text-base: 17px;
+    --text-lg: 21px;
+    --text-xl: 26px;
+    --text-2xl: 34px;
+  }
+}
+
+/* Scrollbar Styling - responsive */
 .elders-table-container::-webkit-scrollbar,
 .debate-container::-webkit-scrollbar,
 .leaderboard-container::-webkit-scrollbar {
-  width: 8px;
+  width: clamp(6px, 0.5vw, 8px);
 }
 
 .elders-table-container::-webkit-scrollbar-track,
@@ -530,10 +634,10 @@ h2 {
 .debate-active::before {
   content: '';
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 10px;
-  height: 10px;
+  top: clamp(8px, 1vh, 10px);
+  right: clamp(8px, 1vh, 10px);
+  width: clamp(8px, 1vh, 10px);
+  height: clamp(8px, 1vh, 10px);
   background: #48bb78;
   border-radius: 50%;
   animation: pulse 1s infinite;
@@ -547,5 +651,19 @@ h2 {
   50% {
     transform: scale(1.2);
     opacity: 0.7;
+  }
+}
+
+/* Print styles */
+@media print {
+  .council-container {
+    display: block;
+    height: auto;
+    background: white;
+  }
+
+  .submit-button,
+  .question-input-container {
+    display: none;
   }
 }
