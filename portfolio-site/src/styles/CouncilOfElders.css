@@ -24,6 +24,27 @@
   box-sizing: border-box;
 }
 
+/* Quick iOS fix */
+@supports (-webkit-touch-callout: none) {
+  .council-container {
+    height: 100%;
+    min-height: 100%;
+    position: relative;
+  }
+  
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  #root {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 /* Common panel styles */
 .elders-panel,
 .debate-panel,
