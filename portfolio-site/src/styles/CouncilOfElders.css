@@ -508,10 +508,11 @@ h2 {
 /* Mobile View (max-width: 768px) */
 @media (max-width: 768px) {
   .council-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
+    display: flex;
+    flex-direction: column;
     height: auto;
-    min-height: 100vh;
+    min-height: unset;
+    overflow: visible;
     gap: 10px;
     padding: 10px;
   }
@@ -520,11 +521,23 @@ h2 {
   .debate-panel,
   .leaderboard-panel {
     max-height: none;
-    min-height: 300px;
+    min-height: unset;
+    height: auto;
+    flex-shrink: 0;
   }
 
   .debate-panel {
-    min-height: 400px;
+    min-height: unset;
+  }
+
+  .debate-container {
+    min-height: 300px;
+    max-height: 50vh;
+  }
+
+  .elders-table-container,
+  .leaderboard-container {
+    max-height: 250px;
   }
 
   /* Adjust avatar size on mobile */
