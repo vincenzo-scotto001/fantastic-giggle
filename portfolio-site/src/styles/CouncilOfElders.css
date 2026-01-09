@@ -40,7 +40,6 @@
   gap: var(--panel-gap);
   padding: var(--panel-padding);
   background: var(--gradient-primary);
-  min-height: calc(100vh - var(--nav-height));
 }
 
 /* Shared Panel Styles */
@@ -542,7 +541,7 @@
   .council-container {
     display: grid;
     grid-template-columns: minmax(280px, 30%) 1fr minmax(250px, 25%);
-    height: calc(100vh - var(--nav-height));
+    min-height: calc(100dvh - 60px);
     overflow: hidden;
   }
 
