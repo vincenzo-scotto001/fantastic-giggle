@@ -1,22 +1,8 @@
 /* ===========================================
-   Council of Elders - Optimized Mobile-First CSS
+   Council of Elders - Simple Single-Column Layout
    =========================================== */
 
-/* CSS Variables */
 :root {
-  --nav-height: 60px;
-  --panel-gap: 10px;
-  --panel-padding: 12px;
-  --panel-radius: 12px;
-  
-  /* Fluid typography using clamp */
-  --text-xs: clamp(11px, 2.5vw, 13px);
-  --text-sm: clamp(12px, 2.8vw, 14px);
-  --text-base: clamp(14px, 3vw, 16px);
-  --text-lg: clamp(16px, 3.5vw, 20px);
-  --text-xl: clamp(18px, 4vw, 24px);
-  
-  /* Colors */
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-gold: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
   --gradient-success: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
@@ -30,119 +16,198 @@
 }
 
 /* ===========================================
-   Base / Mobile Styles (default)
+   Main Container
    =========================================== */
 
-/* Main Container - Mobile: stacked layout */
 .council-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--panel-gap);
-  padding: var(--panel-padding);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
   background: var(--gradient-primary);
+  min-height: 100vh;
 }
 
-/* Shared Panel Styles */
+/* ===========================================
+   Shared Panel Styles
+   =========================================== */
+
 .elders-panel,
 .debate-panel,
 .leaderboard-panel {
   background: var(--bg-panel);
-  border-radius: var(--panel-radius);
-  padding: var(--panel-padding);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-}
-
-/* Panel Headers */
-.elders-panel h2,
-.debate-panel h2,
-.leaderboard-panel h2 {
-  margin: 0 0 12px 0;
-  padding-bottom: 8px;
-  color: var(--text-dark);
-  font-size: var(--text-xl);
-  font-weight: 700;
-  text-align: center;
-  border-bottom: 2px solid var(--border-color);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
 /* ===========================================
-   Elders Table
+   Collapsible Sections (Elders & Leaderboard)
    =========================================== */
 
-.elders-table-container {
-  overflow-y: auto;
-  max-height: 200px;
+.elders-panel h2,
+.leaderboard-panel h2 {
+  margin: 0;
+  padding: 16px;
+  color: var(--text-dark);
+  font-size: 18px;
+  font-weight: 700;
+  background: var(--bg-subtle);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  transition: background 0.2s;
 }
 
-.elders-table {
+.elders-panel h2:hover,
+.leaderboard-panel h2:hover {
+  background: #edf2f7;
+}
+
+/* Arrow indicator for collapsible */
+.elders-panel h2::after,
+.leaderboard-panel h2::after {
+  content: '▼';
+  font-size: 12px;
+  transition: transform 0.3s;
+}
+
+.elders-panel.collapsed h2::after,
+.leaderboard-panel.collapsed h2::after {
+  transform: rotate(-90deg);
+}
+
+/* Collapsible content wrapper */
+.elders-table-container,
+.leaderboard-container {
+  max-height: 300px;
+  overflow-y: auto;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.elders-panel.collapsed .elders-table-container,
+.leaderboard-panel.collapsed .leaderboard-container {
+  max-height: 0;
+  overflow: hidden;
+}
+
+/* ===========================================
+   Tables (Elders & Leaderboard)
+   =========================================== */
+
+.elders-table,
+.leaderboard-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--text-sm);
-}
-
-.elders-table thead {
-  position: sticky;
-  top: 0;
-  background: var(--bg-subtle);
-  z-index: 10;
+  font-size: 14px;
 }
 
 .elders-table th,
-.elders-table td {
-  padding: 8px 10px;
+.elders-table td,
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
 }
 
-.elders-table th {
+.elders-table th,
+.leaderboard-table th {
   font-weight: 600;
   color: var(--text-medium);
-  border-bottom-width: 2px;
+  background: var(--bg-subtle);
+  position: sticky;
+  top: 0;
 }
 
-.elders-table tr:hover {
+.elders-table tr:hover,
+.leaderboard-table tr:hover {
   background: var(--bg-subtle);
 }
 
 .elders-table tr.selected {
   background: #bee3f8;
-  animation: highlight 0.5s ease-in-out;
 }
 
-.elder-name {
+.elder-name,
+.leader-name {
   font-weight: 600;
   color: var(--text-dark);
-  white-space: nowrap;
 }
 
 .elder-description {
-  font-size: var(--text-xs);
+  font-size: 13px;
   color: var(--text-medium);
   line-height: 1.4;
-  display: none; /* Hidden on mobile */
+}
+
+/* Leaderboard specific */
+.leaderboard-table tr.rank-1 {
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.3) 0%, transparent 100%);
+}
+
+.leaderboard-table tr.rank-2 {
+  background: linear-gradient(90deg, rgba(192, 192, 192, 0.3) 0%, transparent 100%);
+}
+
+.leaderboard-table tr.rank-3 {
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.3) 0%, transparent 100%);
+}
+
+.rank {
+  font-weight: 700;
+  text-align: center;
+  font-size: 16px;
+}
+
+.points {
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+}
+
+.leaderboard-more {
+  text-align: center;
+  padding: 12px;
+  color: var(--text-light);
+  font-style: italic;
+  font-size: 13px;
 }
 
 /* ===========================================
-   Debate Panel
+   Debate Panel (Main Focus)
    =========================================== */
 
+.debate-panel {
+  padding: 20px;
+}
+
+.debate-panel h2 {
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  color: var(--text-dark);
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 2px solid var(--border-color);
+}
+
+/* Question Input */
 .question-input-container {
-  margin-bottom: 12px;
-  flex-shrink: 0;
+  margin-bottom: 20px;
 }
 
 .question-input {
   width: 100%;
-  padding: 10px;
+  padding: 14px;
   border: 2px solid var(--border-color);
   border-radius: 8px;
-  font-size: var(--text-sm);
+  font-size: 16px;
   font-family: inherit;
-  resize: vertical;
-  min-height: 50px;
-  max-height: 100px;
+  resize: none;
+  min-height: 60px;
   box-sizing: border-box;
   transition: border-color 0.2s;
 }
@@ -159,13 +224,13 @@
 
 .submit-button {
   width: 100%;
-  padding: 12px;
-  margin-top: 8px;
+  padding: 14px;
+  margin-top: 10px;
   background: var(--gradient-primary);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: var(--text-base);
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -183,25 +248,26 @@
 
 /* Debate Container */
 .debate-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
   background: var(--bg-subtle);
   border-radius: 8px;
-  min-height: 250px;
-  max-height: 50vh;
-  word-wrap: break-word;
+  padding: 16px;
+  min-height: 300px;
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 .debate-placeholder {
   text-align: center;
   color: #a0aec0;
   font-style: italic;
-  margin-top: 60px;
-  font-size: var(--text-lg);
+  margin-top: 80px;
+  font-size: 18px;
 }
 
-/* Debate Messages */
+/* ===========================================
+   Debate Messages
+   =========================================== */
+
 .debate-message {
   margin-bottom: 16px;
   animation: fadeIn 0.5s ease-in;
@@ -209,12 +275,12 @@
 
 .debate-message.elder {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .elder-avatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--gradient-primary);
   color: white;
@@ -222,67 +288,65 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 11px;
+  font-size: 12px;
   flex-shrink: 0;
 }
 
 .message-content {
   flex: 1;
   background: white;
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  word-wrap: break-word;
 }
 
 .elder-name-label {
   font-weight: 600;
   color: var(--text-medium);
   margin-bottom: 4px;
-  font-size: var(--text-xs);
+  font-size: 13px;
 }
 
 .message-text {
   color: var(--text-dark);
   line-height: 1.5;
-  font-size: var(--text-sm);
+  font-size: 15px;
 }
 
 /* System Messages */
 .system-message {
   text-align: center;
-  padding: 10px 16px;
+  padding: 12px 20px;
   background: var(--gradient-gold);
   color: white;
   border-radius: 8px;
   font-weight: 500;
-  font-size: var(--text-sm);
+  font-size: 14px;
   margin: 16px auto;
-  max-width: 85%;
+  max-width: 90%;
 }
 
 /* Typing Indicator */
 .typing-indicator {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 16px;
   animation: fadeIn 0.3s ease-in;
 }
 
 .typing-bubble {
   background: white;
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  gap: 4px;
-  min-width: 50px;
+  gap: 5px;
 }
 
 .typing-dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--accent);
   animation: typingBounce 1.4s infinite ease-in-out;
@@ -295,35 +359,34 @@
 /* Debate Results */
 .debate-results {
   background: var(--gradient-success);
-  border-radius: 10px;
-  padding: 16px;
-  margin-top: 16px;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
   text-align: center;
   animation: slideUp 0.5s ease-out;
 }
 
 .debate-results h3 {
   color: #1a365d;
-  margin: 0 0 8px 0;
-  font-size: var(--text-lg);
+  margin: 0 0 10px 0;
+  font-size: 18px;
 }
 
 .debate-results p {
   color: #2c5282;
   margin: 5px 0;
-  font-size: var(--text-sm);
+  font-size: 14px;
 }
 
 .voting-details {
-  font-size: var(--text-sm);
-  margin-top: 8px;
-  padding-top: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .final-answer {
-  margin-top: 12px;
-  padding: 12px;
+  margin-top: 15px;
+  padding: 15px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   text-align: left;
@@ -332,7 +395,7 @@
 .final-answer h4 {
   color: #1a365d;
   margin: 0 0 8px 0;
-  font-size: var(--text-base);
+  font-size: 16px;
 }
 
 .final-answer p {
@@ -340,85 +403,29 @@
 }
 
 .points-awarded {
-  margin-top: 8px;
+  margin-top: 10px;
   font-weight: 600;
   color: #22543d;
 }
 
 /* ===========================================
-   Leaderboard
+   Active Debate Indicator
    =========================================== */
 
-.leaderboard-container {
-  overflow-y: auto;
-  max-height: 200px;
+.debate-active {
+  position: relative;
 }
 
-.leaderboard-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-sm);
-}
-
-.leaderboard-table thead {
-  position: sticky;
-  top: 0;
-  background: var(--bg-subtle);
-  z-index: 10;
-}
-
-.leaderboard-table th,
-.leaderboard-table td {
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.leaderboard-table th {
-  text-align: left;
-  font-weight: 600;
-  color: var(--text-medium);
-  border-bottom-width: 2px;
-}
-
-.leaderboard-table tr:hover {
-  background: var(--bg-subtle);
-}
-
-.leaderboard-table tr.rank-1 {
-  background: linear-gradient(90deg, rgba(255, 215, 0, 0.3) 0%, transparent 100%);
-}
-
-.leaderboard-table tr.rank-2 {
-  background: linear-gradient(90deg, rgba(192, 192, 192, 0.3) 0%, transparent 100%);
-}
-
-.leaderboard-table tr.rank-3 {
-  background: linear-gradient(90deg, rgba(205, 127, 50, 0.3) 0%, transparent 100%);
-}
-
-.rank {
-  font-weight: 700;
-  text-align: center;
-  font-size: var(--text-base);
-}
-
-.leader-name {
-  font-weight: 600;
-  color: var(--text-dark);
-}
-
-.points {
-  font-weight: 700;
-  color: var(--accent);
-  text-align: center;
-}
-
-.leaderboard-more {
-  text-align: center;
-  padding: 8px;
-  color: var(--text-light);
-  font-style: italic;
-  font-size: var(--text-xs);
+.debate-active::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  background: #48bb78;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
 }
 
 /* ===========================================
@@ -435,12 +442,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes highlight {
-  0% { background: #ffffff; }
-  50% { background: #90cdf4; }
-  100% { background: #bee3f8; }
-}
-
 @keyframes typingBounce {
   0%, 80%, 100% { transform: scale(1); opacity: 0.5; }
   40% { transform: scale(1.3); opacity: 1; }
@@ -449,23 +450,6 @@
 @keyframes pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.2); opacity: 0.7; }
-}
-
-/* Active debate indicator */
-.debate-active {
-  position: relative;
-}
-
-.debate-active::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 10px;
-  height: 10px;
-  background: #48bb78;
-  border-radius: 50%;
-  animation: pulse 1s infinite;
 }
 
 /* ===========================================
@@ -499,103 +483,15 @@
 }
 
 /* ===========================================
-   Tablet (min-width: 768px)
-   =========================================== */
-
-@media (min-width: 768px) {
-  :root {
-    --panel-gap: 16px;
-    --panel-padding: 16px;
-  }
-
-  .elder-description {
-    display: table-cell;
-  }
-
-  .elders-table-container,
-  .leaderboard-container {
-    max-height: 280px;
-  }
-
-  .debate-container {
-    max-height: 60vh;
-  }
-
-  .elder-avatar {
-    width: 40px;
-    height: 40px;
-    font-size: 12px;
-  }
-}
-
-/* ===========================================
-   Desktop (min-width: 1024px)
+   Larger Screens - Widen Container
    =========================================== */
 
 @media (min-width: 1024px) {
-  :root {
-    --panel-gap: 20px;
-    --panel-padding: 20px;
-  }
-
   .council-container {
-    display: grid;
-    grid-template-columns: minmax(280px, 30%) 1fr minmax(250px, 25%);
-    min-height: calc(100dvh - 60px);
-    overflow: hidden;
+    max-width: 900px;
   }
-
-  .elders-panel,
-  .debate-panel,
-  .leaderboard-panel {
-    overflow: hidden;
-    min-height: 0;
-  }
-
-  .elders-table-container,
-  .leaderboard-container {
-    flex: 1;
-    max-height: none;
-    min-height: 0;
-  }
-
+  
   .debate-container {
-    flex: 1;
-    max-height: none;
-    min-height: 0;
-  }
-
-  .elder-avatar {
-    width: 45px;
-    height: 45px;
-    font-size: 14px;
-  }
-}
-
-/* ===========================================
-   Large Desktop (min-width: 1440px)
-   =========================================== */
-
-@media (min-width: 1440px) {
-  .council-container {
-    max-width: 1800px;
-    margin: 0 auto;
-  }
-}
-
-/* ===========================================
-   Print Styles
-   =========================================== */
-
-@media print {
-  .council-container {
-    display: block;
-    height: auto;
-    background: white;
-  }
-
-  .submit-button,
-  .question-input-container {
-    display: none;
+    min-height: 400px;
   }
 }
