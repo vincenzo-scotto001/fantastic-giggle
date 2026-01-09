@@ -54,6 +54,10 @@ const CouncilOfEldersWithAPI = () => {
   const [votingDetails, setVotingDetails] = useState(null);
   const [isLoadingLeaderboard, setIsLoadingLeaderboard] = useState(true);
   
+  // Collapsible state
+  const [eldersCollapsed, setEldersCollapsed] = useState(true);
+  const [leaderboardCollapsed, setLeaderboardCollapsed] = useState(true);
+  
   const debateContainerRef = useRef(null);
   const timerIntervalRef = useRef(null);
 
@@ -231,9 +235,11 @@ const CouncilOfEldersWithAPI = () => {
 
   return (
     <div className="council-container">
-      {/* Left Panel - Elders Table */}
-      <div className="elders-panel">
-        <h2>The Council of Elders</h2>
+      {/* Collapsible Elders Panel */}
+      <div className={`elders-panel ${eldersCollapsed ? 'collapsed' : ''}`}>
+        <h2 onClick={() => setEldersCollapsed(!eldersCollapsed)}>
+          The Council of Elders
+        </h2>
         <div className="elders-table-container">
           <table className="elders-table">
             <thead>
@@ -254,7 +260,7 @@ const CouncilOfEldersWithAPI = () => {
         </div>
       </div>
 
-      {/* Center Panel - Question Input and Debate Display */}
+      {/* Main Debate Panel */}
       <div className="debate-panel">
         <h2 className={isDebating ? 'debate-active' : ''}>
           Council Debate Chamber
@@ -346,9 +352,9 @@ const CouncilOfEldersWithAPI = () => {
         </div>
       </div>
 
-      {/* Right Panel - Leaderboard */}
-      <div className="leaderboard-panel">
-        <h2>
+      {/* Collapsible Leaderboard Panel */}
+      <div className={`leaderboard-panel ${leaderboardCollapsed ? 'collapsed' : ''}`}>
+        <h2 onClick={() => setLeaderboardCollapsed(!leaderboardCollapsed)}>
           Global Standings
           {!isLoadingLeaderboard && (
             <span style={{ fontSize: '12px', marginLeft: '10px', color: '#718096' }}>
