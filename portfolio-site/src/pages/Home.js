@@ -18,26 +18,38 @@ function Home() {
     textarea.style.height = `${textarea.scrollHeight}px`; // Set height to scroll height
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setLoading(true);
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  setLoading(true);
+
+  const maxRetries = 2;
   
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const response = await axios.post('/api', { userInput });
       setLlmResponse(response.data.result);
+      break; // Success, exit loop
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error(`Attempt ${attempt} failed:`, error);
       
-      // Check if it's a 400 error with the specific message
+      // Check if it's a 400 error (user error, don't retry)
       if (error.response && error.response.status === 400) {
         setLlmResponse(error.response.data.result || 'Please type a question.');
-      } else {
-        setLlmResponse('Sorry, something went wrong.');
+        break;
       }
-    } finally {
-      setLoading(false);
+      
+      // If last attempt, show error
+      if (attempt === maxRetries) {
+        setLlmResponse('Sorry, something went wrong. Please try again.');
+      } else {
+        // Wait 1 second before retrying
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
-  };
+  }
+  
+  setLoading(false);
+};
 
   return (
     <div className="home">
