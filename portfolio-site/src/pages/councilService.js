@@ -16,7 +16,7 @@ class CouncilDebateService {
   // Create the debate context
   createDebateContext(question, selectedElders, previousMessages = []) {
     const context = `
-      A council of 9 elders is debating the following question: "${question}"
+      A council of 7 elders is debating the following question: "${question}"
       
       The participating elders are:
       ${selectedElders.map(e => `- ${e.name}: ${e.description}`).join('\n')}
