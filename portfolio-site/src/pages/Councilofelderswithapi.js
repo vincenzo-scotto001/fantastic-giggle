@@ -144,9 +144,9 @@ const CouncilOfEldersWithAPI = () => {
       setElapsedTime(prev => prev + 1);
     }, 1000);
 
-    // Randomly select 9 elders
+    // Randomly select 7 elders
     const shuffled = [...eldersList].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 9);
+    const selected = shuffled.slice(0, 7);
     setSelectedElders(selected);
 
     try {
