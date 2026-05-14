@@ -2,35 +2,39 @@
 nav {
   background-color: #1E201E;
   padding: 1rem;
-  display: flex;
-  justify-content: center; /* Center-align the navbar items */
 }
 
 /* Unordered list styling */
 nav ul {
   list-style: none;
   display: flex;
-  gap: 2rem; /* Increase spacing between items */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
   margin: 0;
   padding: 0;
 }
 
-/* Navbar items */
-nav ul li {
-  color: white;
-  font-size: 1.1rem;
-}
-
 /* Navbar links */
 nav ul li a {
+  display: block;
   color: #ECDFCC;
   text-decoration: none;
-  padding: 0.5rem 1rem; /* Add padding for clickable area */
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
   transition: color 0.3s ease, background-color 0.3s ease;
-  border-radius: 5px; /* Slightly rounded corners */
+  border-radius: 5px;
+  white-space: nowrap;
 }
 
 nav ul li a:hover {
   color: #007bff;
-  background-color: #444; /* Background color on hover */
+  background-color: #444;
+}
+
+/* Larger screens - more spacing */
+@media (min-width: 768px) {
+  nav ul {
+    gap: 0.5rem 2rem;
+  }
 }
