@@ -422,13 +422,12 @@ module.exports = async (req, res) => {
       console.error('Error:', error.response?.data || error.message);
       res.status(500).json({ error: 'Failed to fetch response' });
     }
-  } else if (req.method === 'GET') {
-    // Handle GET requests for leaderboard
-    if (req.url === '/api?action=getLeaderboard') {
-      return await getCouncilLeaderboard(res);
-    }
-    res.status(405).json({ error: 'Method not allowed' });
-  } else {
+    } else if (req.method === 'GET') {
+        if (req.query.action === 'getLeaderboard') {
+          return await getCouncilLeaderboard(res);
+        }
+        return res.status(404).json({ error: 'Not found' });
+    } else {
     res.setHeader('Allow', ['POST', 'GET']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
