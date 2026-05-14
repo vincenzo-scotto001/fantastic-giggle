@@ -4,21 +4,29 @@ import '../styles/CV.css';
 const experiences = [
   {
     id: 1,
-    title: "Associate Director of Data Science",
-    company: "Publicis Groupe",
-    time: "April 2025 - Now",
-    description: "Here I lead our the analytics of LAL, propensity and predictive models. I am also leading the charge on automation and GenAI initiatives.",
+    title: "Associate Director of AI Strategy and Engineering",
+    company: "Venetian Las Vegas",
+    time: "April 2026 - Now",
+    description: "Here I lead the AI strategy and engineering efforts for the Venetian, with a focus on GenAI implementations across various departments, from marketing to operations.",
     
   },
   {
     id: 2,
+    title: "Associate Director of Data Science",
+    company: "Publicis Groupe",
+    time: "April 2025 - April 2026",
+    description: "Here I lead our the analytics of LAL, propensity and predictive models. I am also leading the charge on automation and GenAI initiatives.",
+    
+  },
+  {
+    id: 3,
     title: "Head of Long-term Forecasting",
     company: "KraftHeinz Company",
     time: "Aug. 2023 - Now",
     description: "Here our team worked on long term forecasting (4+ months), and GenAI implementations.",
   },
   {
-    id: 3,
+    id: 4,
     title: "Head of Data Science",
     company: "Venetian Las Vegas",
     time: "Feb. 2022 - Aug. 2023",
@@ -26,7 +34,7 @@ const experiences = [
     
   },
   {
-    id: 4,
+    id: 5,
     title: "Lead Data Scientist",
     company: "DuPont/IFF Nutrition and Biosciences",
     time: "Jan. 2019 - Feb. 2022",
