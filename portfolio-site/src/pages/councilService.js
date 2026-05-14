@@ -24,7 +24,7 @@ class CouncilDebateService {
       Rules for the debate:
       1. Each elder should speak in character based on their personality
       2. Responses should be 2-3 sentences maximum
-      3. Elders should respond to and build upon previous arguments
+      3. Elders should debate vigorously, engaging with each other's points and challenging ideas
       4. The debate should work toward finding a consensus answer
       5. After sufficient discussion, elders should vote on the best answer
       
