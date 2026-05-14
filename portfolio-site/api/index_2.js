@@ -401,7 +401,7 @@ module.exports = async (req, res) => {
             },
             { role: 'user', content: enhancedPrompt },
           ],
-          model: 'ft:gpt-4o-2024-08-06:personal:me-v3:ATXTckgl',
+          model: 'gpt-4.1-nano',
           max_tokens: 150,
         },
         {
@@ -415,8 +415,9 @@ module.exports = async (req, res) => {
       const answerText = response.data.choices[0].message.content;
 
       // Log the interaction to Supabase
-      await logInteraction(userInput, answerText, context);
-
+      logInteraction(userInput, answerText, context).catch(err => 
+        console.error('Log failed:', err)
+      );
       res.status(200).json({ result: answerText });
     } catch (error) {
       console.error('Error:', error.response?.data || error.message);
