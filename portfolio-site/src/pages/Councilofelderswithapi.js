@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import CouncilDebateService from '../pages/councilService';
 import '../styles/CouncilOfElders.css';
 
@@ -61,41 +61,38 @@ const CouncilOfEldersWithAPI = () => {
   const debateContainerRef = useRef(null);
   const timerIntervalRef = useRef(null);
 
-  // Fetch leaderboard from Supabase on mount and after updates
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = useCallback(async () => {
     setIsLoadingLeaderboard(true);
     try {
       const response = await fetch('/api?action=getLeaderboard');
       const data = await response.json();
-      
+
       if (data.elders) {
-        // Merge Supabase data with local elder definitions
-        const mergedElders = eldersList.map(elder => {
-          const supabaseElder = data.elders.find(e => e.id === elder.id);
-          return {
-            ...elder,
-            points: supabaseElder ? supabaseElder.points : 0
-          };
+        setEldersList(prevElders => {
+          const merged = prevElders.map(elder => {
+            const supabaseElder = data.elders.find(e => e.id === elder.id);
+            return {
+              ...elder,
+              points: supabaseElder ? supabaseElder.points : 0,
+            };
+          });
+          setLeaderboard([...merged].sort((a, b) => b.points - a.points));
+          return merged;
         });
-        
-        setEldersList(mergedElders);
-        setLeaderboard(mergedElders.sort((a, b) => b.points - a.points));
       }
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
-      setLeaderboard([...eldersList].sort((a, b) => b.points - a.points));
+      setLeaderboard(prev => [...prev].sort((a, b) => b.points - a.points));
     } finally {
       setIsLoadingLeaderboard(false);
     }
-  };
+  }, []);
 
-  // Fetch leaderboard on component mount
   useEffect(() => {
     fetchLeaderboard();
-    // Refresh leaderboard every 30 seconds
     const interval = setInterval(fetchLeaderboard, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchLeaderboard]);
 
   // Update elder points in Supabase
   const updateElderPointsInSupabase = async (winner) => {
