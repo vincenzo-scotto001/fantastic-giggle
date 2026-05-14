@@ -37,53 +37,84 @@ module.exports = async (req, res) => {
   }
 };
 
-// Handle elder response generation
-async function handleElderResponse(data, res) {
-  const { elder, question, debateContext } = data;
-  
-  const messages = [
-    {
-      role: 'system',
-      content: `You are ${elder.name}, with the following personality: ${elder.description}. 
-      Respond to questions in character, maintaining this personality throughout the debate.
-      Keep responses concise (2-3 sentences max) and engage with other elders' points.`
-    },
-    {
-      role: 'user',
-      content: `${debateContext}
-      
-      As ${elder.name}, provide your perspective on this question. 
-      Remember to stay in character and keep your response to 2-3 sentences.`
+  // Handle elder response generation
+  async function handleElderResponse(data, res) {
+    const { elder, question, previousMessages = [], round = 0 } = data;
+
+    const systemPrompt = `You are ${elder.name}. Personality: ${elder.description}
+
+  You are in a debate. You are NOT a polite collaborator. Your job is to:
+  - Hold your position fiercely
+  - Mock, dismiss, or aggressively endorse other elders by name
+  - Use sharp language: "wrong," "absurd," "exactly right," "naive," "delusional"
+  - Never hedge with "I think" or "perhaps" — speak with conviction
+  - If you agree with someone, agree LOUDLY and add fuel
+  - If you disagree, attack their reasoning, not just state your own view
+
+  Stay 100% in character. The Contrarian contradicts everyone. The Doomsayer catastrophizes. The Optimist is annoyingly cheerful in the face of doom. The Skeptic doubts everything anyone says. Play these traits to the hilt — characters who barely tolerate each other.
+
+  Maximum 2-3 sentences. Be punchy.`;
+
+    const isFirstSpeaker = previousMessages.length === 0;
+    const lastMessage = previousMessages[previousMessages.length - 1];
+
+    let userPrompt;
+    if (isFirstSpeaker) {
+      userPrompt = `The council convenes to debate: "${question}"
+
+  Open the debate. State your position with conviction. Be bold and stake out clear ground that other elders can attack. 2-3 sentences.`;
+    } else if (round === 0) {
+      userPrompt = `The council is debating: "${question}"
+
+  So far in the debate:
+  ${previousMessages.map(m => `${m.elder}: ${m.content}`).join('\n\n')}
+
+  ${lastMessage.elder} just said: "${lastMessage.content}"
+
+  You MUST do ONE of these — pick whichever fits your personality:
+  (a) Directly attack their argument. Quote them or paraphrase, then explain why they're wrong. Use phrases like "That's nonsense because..." or "${lastMessage.elder} is missing the point entirely..."
+  (b) Aggressively agree and escalate. "${lastMessage.elder} is right, and it's worse than they're admitting..." then push further.
+  (c) Pivot the debate. Call out what everyone is ignoring.
+
+  Do NOT politely add your own separate perspective. You must engage with what was just said. Name names. Be sharp. 2-3 sentences.`;
+    } else {
+      userPrompt = `The council is debating: "${question}"
+
+  This is round 2. The debate so far:
+  ${previousMessages.map(m => `${m.elder}: ${m.content}`).join('\n\n')}
+
+  Pick the elder you most disagree with and tear into their argument by name. Or, if you've changed your mind because of someone, say who convinced you and why the others are still wrong. No fence-sitting. 2-3 sentences.`;
     }
-  ];
 
-  try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-4o-mini', // Using a more cost-effective model
-        messages: messages,
-        temperature: 1.0,
-        max_tokens: 200
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
+    try {
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ],
+          temperature: 0.9,
+          max_tokens: 200
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
         }
-      }
-    );
+      );
 
-    const elderResponse = response.data.choices[0].message.content;
-    res.status(200).json({ response: elderResponse });
-  } catch (error) {
-    console.error('Error generating elder response:', error.response?.data || error.message);
-    // Fallback response
-    res.status(200).json({ 
-      response: `As ${elder.name}, I believe we need to carefully consider all aspects of this question.`
-    });
+      const elderResponse = response.data.choices[0].message.content;
+      res.status(200).json({ response: elderResponse });
+    } catch (error) {
+      console.error('Error generating elder response:', error.response?.data || error.message);
+      res.status(200).json({
+        response: `As ${elder.name}, I believe we need to carefully consider all aspects of this question.`
+      });
+    }
   }
-}
 
 // Handle voting logic
 async function handleVoting(data, res) {

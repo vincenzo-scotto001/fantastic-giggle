@@ -41,8 +41,8 @@ class CouncilDebateService {
     return context;
   }
 
-  // Get a single elder's response via API
-  async getElderResponse(elder, question, debateContext) {
+// Get a single elder's response via API
+  async getElderResponse(elder, question, previousMessages, round) {
     try {
       const response = await fetch(this.apiUrl, {
         method: 'POST',
@@ -54,7 +54,8 @@ class CouncilDebateService {
           data: {
             elder,
             question,
-            debateContext
+            previousMessages,
+            round
           }
         })
       });
@@ -67,7 +68,6 @@ class CouncilDebateService {
       return data.response;
     } catch (error) {
       console.error(`Error getting response for ${elder.name}:`, error);
-      // Return a fallback response
       return `As ${elder.name}, I believe we need to carefully consider all aspects of this question.`;
     }
   }
@@ -77,43 +77,34 @@ class CouncilDebateService {
     const { onElderTyping, onElderSpeak, onSystemMessage, onDebateComplete } = callbacks;
     const debateMessages = [];
     const speakingOrder = this.determineSpeakingOrder(selectedElders);
-    
-    // Initial system message
+
     onSystemMessage(`The Council convenes to discuss: "${question}"`);
     await this.delay(1500);
 
-    // Each elder speaks in turn
-    for (let round = 0; round < 2; round++) { // 2 rounds of discussion
+    for (let round = 0; round < 2; round++) {
       for (const elder of speakingOrder) {
-        // Show typing indicator
         onElderTyping(elder);
-        
-        // Add random typing delay (1.5-3 seconds) for realism
+
         const typingDelay = 1500 + Math.random() * 1500;
         await this.delay(typingDelay);
-        
-        // Get the elder's response from the API
-        const context = this.createDebateContext(question, selectedElders, debateMessages);
-        const response = await this.getElderResponse(elder, question, context);
-        
-        // Hide typing indicator and show complete message
+
+        const response = await this.getElderResponse(elder, question, debateMessages, round);
+
         onElderSpeak(elder, response);
         debateMessages.push({ elder: elder.name, content: response });
-        
-        // Add delay between speakers for realism
+
         await this.delay(1000);
       }
     }
 
-    // Conduct voting
     onSystemMessage(`The Council is deliberating...`);
     await this.delay(2000);
-    
+
     const votingResult = await this.conductVoting(question, selectedElders, debateMessages);
     onSystemMessage(`The Council has reached a decision...`);
-    
+
     await this.delay(1000);
-    
+
     onDebateComplete(votingResult);
   }
 
