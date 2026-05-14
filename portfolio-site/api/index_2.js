@@ -113,8 +113,8 @@ async function handleElderResponse(data, res) {
       {
         model: 'gpt-4o-mini',
         messages: messages,
-        temperature: 0.8,
-        max_tokens: 150
+        temperature: 1.0,
+        max_tokens: 200
       },
       {
         headers: {
